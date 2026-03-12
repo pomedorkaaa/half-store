@@ -1,7 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { Product } from '../types';
 import { ProductCard } from './ProductCard';
-import { Search, Loader2, AlertCircle } from 'lucide-react';
+import { SearchBar } from './SearchBar';
+import { FilterButtons } from './FilterButtons';
+import { Counter } from './Counter';
+import { Loader2, AlertCircle } from 'lucide-react';
 
 interface ProductListProps {
   products: Product[];
@@ -33,40 +36,12 @@ export const ProductList: React.FC<ProductListProps> = ({ products, isLoading, e
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" id="catalog">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <div className="relative w-full md:w-96">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search size={18} className="text-gray-400" />
-          </div>
-          <input
-            type="text"
-            className="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-lg leading-5 bg-gray-800 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-pink-500 focus:border-pink-500 transition-colors"
-            placeholder="Поиск товаров (половинок)..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          {categories.map(category => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                selectedCategory === category 
-                  ? 'bg-pink-600 text-white shadow-[0_0_10px_rgba(236,72,153,0.5)]' 
-                  : 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700 hover:text-white'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
+        <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+        <FilterButtons categories={categories} selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
       </div>
 
       {!isLoading && !error && (
-        <div className="mb-6 flex justify-between text-sm text-gray-400">
-          <span>Показано товаров: <strong className="text-pink-400">{filteredProducts.length}</strong> {selectedCategory !== 'Все' && `в категории ${selectedCategory}`}</span>
-        </div>
+        <Counter count={filteredProducts.length} category={selectedCategory} />
       )}
 
       {isLoading ? (
