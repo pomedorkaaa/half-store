@@ -1,50 +1,50 @@
-# React + TypeScript + Vite
+# Вторая половинка (Half-Store) 💔
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Уникальный концепт интернет-магазина, в котором продаются только "половинки" товаров. Зачем платить за всё, если вам нужна только часть? (Буквально, скидка 50% на весь ассортимент).
 
-Currently, two official plugins are available:
+Данный проект создан в рамках лабораторной работы по дисциплине "Tehnologii Web" (React).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Особенности и стек технологий
 
-## Expanding the ESLint configuration
+*   **Front-end:** React 18 + TypeScript + Vite
+*   **Стилизация:** Tailwind CSS v4 (Адаптивный дизайн через Flexbox и Grid, эффекты Glassmorphism)
+*   **Иконки:** `lucide-react`
+*   **Данные:** Интеграция с [FakeStoreAPI](https://fakestoreapi.com/) + кастомные Mock-данные.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## ⚙️ Реализованный функционал
 
-- Configure the top-level `parserOptions` property like this:
+1.  **Каталог товаров:**
+    *   Подгрузка товаров из `FakeStoreAPI` с трансформацией данных под "половинки" (перевод категорий, снижение цены на 50%).
+    *   Особые Mock-товары (кофе, зонт, гвозди и т.д.), для которых были сгенерированы фотореалистичные ИИ-изображения половинок.
+    *   CSS-хитрость: для обычных товаров с API применяется эффект `clip-path`, который визуально отсекает ровно половину картинки.
+2.  **Поиск и Фильтрация:**
+    *   "Живой" поиск товаров по названию через `onChange` (работает в реальном времени).
+    *   Фильтрация по категориям (Одежда, Электроника, Ювелирные изделия).
+3.  **Корзина и Избранное (LocalStorage):**
+    *   Возможность добавления товаров в глобальную "Корзину" и "Избранное".
+    *   Данные не теряются при обновлении страницы, так как сохраняются в кэше браузера (LocalStorage).
+    *   Красивые всплывающие модальные окна в шапке (Header) с интерактивом (просмотр списка товаров, цены, удаление элементов).
+4.  **Обработка краевых ситуаций (States):**
+    *   **Loading State:** Плавный индикатор загрузки (Spin) во время общения с внешним API.
+    *   **Error State:** Красивый экран ошибки при отсутствии подключения к сети (данные не грузятся вхолостую).
+    *   **Empty State:** Состояние при пустом результате поиска с возможностью быстро сбросить фильтры.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## 📦 Установка и запуск
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+1. Клонируйте репозиторий:
+   ```bash
+   git clone https://github.com/pomedorkaaa/half-store.git
+   ```
+2. Перейдите в папку проекта:
+   ```bash
+   cd half-store
+   ```
+3. Установите зависимости (если их нет):
+   ```bash
+   npm install
+   ```
+4. Запустите локальный сервер разработки:
+   ```bash
+   npm run dev
+   ```
+5. Откройте `http://localhost:5173` (порт по умолчанию) в вашем браузере.
