@@ -12,8 +12,17 @@
   body {
     @apply bg-bg-darker text-gray-100 font-sans antialiased;
   }
+
+  .light body,
+  html.light body {
+    background-color: #f8fafc;
+    color: #1e293b;
+  }
 }
 
+/* ============================================
+   HALF-CLIP & HOVER EFFECTS
+   ============================================ */
 .half-clip {
   clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
 }
@@ -25,6 +34,238 @@
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
 
+/* ============================================
+   GLASS PANEL (used by product cards, etc.)
+   ============================================ */
 .glass-panel {
   @apply bg-gray-800/80 backdrop-blur-md border border-gray-700 shadow-xl;
+}
+.light .glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: #e2e8f0;
+  color: #1e293b;
+}
+
+/* ============================================
+   DARK THEME DEFAULTS (applied by default)
+   ============================================ */
+
+/* App background */
+.app-bg {
+  background-color: #111827;
+}
+
+/* Header */
+.header-bg {
+  background-color: rgba(31, 41, 55, 0.8);
+}
+.header-border {
+  border-color: rgba(55, 65, 81, 0.5);
+}
+
+/* Nav links */
+.nav-link {
+  color: #d1d5db;
+}
+
+/* Language dropdown */
+.lang-dropdown {
+  background-color: #1f2937;
+}
+.lang-dropdown-item {
+  color: #d1d5db;
+}
+
+/* Hero */
+.hero-bg {
+  background-color: #111827;
+}
+.hero-title {
+  color: #ffffff;
+}
+.hero-subtitle {
+  color: #9ca3af;
+}
+.hero-secondary-btn {
+  color: #d1d5db;
+  background-color: #1f2937;
+}
+.hero-secondary-btn:hover {
+  background-color: #374151;
+}
+
+/* Footer */
+.footer-bg {
+  background-color: #1f2937;
+}
+.footer-border {
+  border-color: #1f2937;
+}
+.footer-text {
+  color: #9ca3af;
+}
+
+/* Modal */
+.modal-bg {
+  background-color: #111827;
+}
+.modal-border {
+  border-color: #374151;
+}
+.modal-text {
+  color: #d1d5db;
+}
+.modal-title {
+  color: #ffffff;
+}
+.modal-close-btn {
+  color: #9ca3af;
+}
+
+/* Support modal */
+.support-modal-bg {
+  background-color: #111827;
+}
+.support-text {
+  color: #d1d5db;
+}
+.support-label {
+  color: #d1d5db;
+}
+.support-input {
+  background-color: #1f2937;
+  color: #f3f4f6;
+}
+
+/* Cart items */
+.cart-item-bg {
+  background-color: rgba(31, 41, 55, 0.5);
+}
+.cart-item-border {
+  border-color: #374151;
+}
+
+/* ============================================
+   LIGHT THEME OVERRIDES
+   ============================================ */
+.light .app-bg {
+  background-color: #f8fafc;
+}
+
+/* Header */
+.light .header-bg {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+.light .header-border {
+  border-color: #e2e8f0;
+}
+
+/* Nav links */
+.light .nav-link {
+  color: #475569;
+}
+
+/* Language dropdown */
+.light .lang-dropdown {
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+}
+.light .lang-dropdown-item {
+  color: #334155;
+}
+.light .lang-dropdown-item:hover {
+  background-color: rgba(236, 72, 153, 0.1);
+}
+
+/* Hero */
+.light .hero-bg {
+  background-color: #f1f5f9;
+}
+.light .hero-title {
+  color: #0f172a;
+}
+.light .hero-subtitle {
+  color: #64748b;
+}
+.light .hero-secondary-btn {
+  color: #475569;
+  background-color: #e2e8f0;
+  border-color: #cbd5e1;
+}
+.light .hero-secondary-btn:hover {
+  background-color: #cbd5e1;
+}
+
+/* Footer */
+.light .footer-bg {
+  background-color: #e2e8f0;
+}
+.light .footer-border {
+  border-color: #cbd5e1;
+}
+.light .footer-text {
+  color: #64748b;
+}
+
+/* Modal */
+.light .modal-bg,
+.light .support-modal-bg {
+  background-color: #ffffff;
+}
+.light .modal-border {
+  border-color: #e2e8f0;
+}
+.light .modal-text,
+.light .support-text {
+  color: #475569;
+}
+.light .modal-title {
+  color: #0f172a;
+}
+.light .modal-close-btn {
+  color: #94a3b8;
+}
+
+/* Support inputs */
+.light .support-label {
+  color: #334155;
+}
+.light .support-input {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+/* Cart items */
+.light .cart-item-bg {
+  background-color: #f1f5f9;
+}
+.light .cart-item-border {
+  border-color: #e2e8f0;
+}
+
+/* Product card text overrides in light */
+.light .glass-panel h3 {
+  color: #0f172a;
+}
+.light .glass-panel p {
+  color: #64748b;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+.animate-in {
+  animation: fadeSlideIn 0.3s ease-out;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }

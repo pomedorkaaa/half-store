@@ -13,17 +13,17 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="bg-bg-darker border border-gray-700 rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 relative">
+      <div className="modal-bg border modal-border rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 relative">
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+          className="absolute top-4 right-4 modal-close-btn hover:text-white transition-colors"
         >
           <X size={24} />
         </button>
-        <h2 className="text-2xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-pink-600">
+        <h2 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-pink-600">
           {title}
         </h2>
-        <div className="text-gray-300">
+        <div className="modal-text">
           {children}
         </div>
       </div>

@@ -4,10 +4,15 @@ import { Hero } from './components/Hero';
 import { ProductList } from './components/ProductList';
 import { Footer } from './components/Footer';
 import { Modal } from './components/Modal';
+import { SupportButton } from './components/SupportButton';
 import { Product } from './types';
 import { mockProducts } from './data/products';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
+import { t } from './i18n';
 
-function App() {
+function AppContent() {
+  const { lang } = useLanguage();
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +42,7 @@ function App() {
       try {
         const response = await fetch('https://fakestoreapi.com/products');
         if (!response.ok) {
-          throw new Error(`Ошибка HTTP: ${response.status}`);
+          throw new Error(`HTTP Error: ${response.status}`);
         }
         const data: Product[] = await response.json();
         
@@ -48,26 +53,24 @@ function App() {
           "women's clothing": "Женская одежда"
         };
         
-        // Transform API data to fit half-store concept
         const transformedData = data.map(item => {
           const translatedCategory = categoryMap[item.category] || item.category;
           return {
             ...item,
             category: translatedCategory,
             title: `Половина от: ${item.title}`,
-            price: item.price / 2, // 50% discount
+            price: item.price / 2,
             description: `Это шикарный оригинальный товар из категории "${translatedCategory}". Мы аккуратно отрезали ровно половину, чтобы сэкономить ваши деньги (и место в шкафу)!`,
             isHalfCustom: false
           };
         });
         
-        // Combine mock data (which has our custom ones) and remote data
         setProducts([...mockProducts, ...transformedData]);
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
         } else {
-          setError("Неизвестная ошибка при загрузке");
+          setError("Unknown error");
         }
         setProducts([]);
       } finally {
@@ -92,7 +95,7 @@ function App() {
   const totalCartCount = Object.values(cart).reduce((a, b) => a + b, 0);
 
   return (
-    <div className="min-h-screen bg-bg-darker flex flex-col font-sans transition-colors duration-300 relative">
+    <div className="min-h-screen app-bg flex flex-col font-sans transition-colors duration-300 relative">
       <Header 
         cartCount={totalCartCount} 
         favCount={favorites.length}
@@ -111,17 +114,18 @@ function App() {
         />
       </main>
       <Footer />
+      <SupportButton />
 
-      {/* Модальное окно Корзины */}
+      {/* Cart Modal */}
       <Modal 
         isOpen={isCartOpen} 
         onClose={() => setIsCartOpen(false)}
-        title="Ваша половина корзины"
+        title={t('cart.title', lang)}
       >
         <div className="space-y-4">
-          <p className="text-gray-300">В корзине товаров (половинок): <strong className="text-white">{totalCartCount}</strong></p>
+          <p className="modal-text">{t('cart.itemsCount', lang)}: <strong className="modal-title">{totalCartCount}</strong></p>
           {Object.keys(cart).length === 0 ? (
-            <p className="text-gray-500 italic">Сначала добавьте хотя бы одну половинку чего-нибудь!</p>
+            <p className="text-gray-500 italic">{t('cart.empty', lang)}</p>
           ) : (
             <ul className="space-y-3 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
               {Object.entries(cart).map(([idStr, quantity]) => {
@@ -129,10 +133,10 @@ function App() {
                 const product = products.find(p => p.id === id);
                 if (!product) return null;
                 return (
-                  <li key={id} className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-xl border border-gray-700">
+                  <li key={id} className="flex items-center gap-3 p-3 cart-item-bg rounded-xl border cart-item-border">
                     <img src={product.image} alt={product.title} className="w-12 h-12 object-cover rounded-lg half-clip" />
                     <div className="flex-grow">
-                      <h4 className="text-sm font-bold text-white line-clamp-1">{product.title}</h4>
+                      <h4 className="text-sm font-bold modal-title line-clamp-1">{product.title}</h4>
                       <span className="text-xs text-yellow-400">${product.price.toFixed(2)} &times; {quantity}</span>
                     </div>
                     <button 
@@ -143,7 +147,7 @@ function App() {
                       })} 
                       className="text-pink-500 hover:text-pink-400 text-sm"
                     >
-                      Удалить
+                      {t('cart.remove', lang)}
                     </button>
                   </li>
                 );
@@ -152,17 +156,17 @@ function App() {
           )}
           
           {totalCartCount > 0 && (
-            <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700 mt-2">
+            <div className="p-4 cart-item-bg rounded-xl border cart-item-border mt-2">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-gray-400">Итого:</span>
-                <span className="text-xl font-bold text-white">
+                <span className="modal-text">{t('cart.total', lang)}:</span>
+                <span className="text-xl font-bold modal-title">
                   ${Object.entries(cart).reduce((sum, [idStr, q]) => {
                     const p = products.find(p => p.id === parseInt(idStr));
                     return sum + (p ? p.price * q : 0);
                   }, 0).toFixed(2)}
                 </span>
               </div>
-              <p className="text-xs text-pink-400 opacity-80">Напоминаем: чтобы собрать целый предмет, вам нужно заказать его дважды!</p>
+              <p className="text-xs text-pink-400 opacity-80">{t('cart.reminder', lang)}</p>
             </div>
           )}
           
@@ -170,33 +174,33 @@ function App() {
             className="w-full py-3 rounded-xl bg-gradient-to-r from-pink-500 to-pink-700 text-white font-bold hover:from-pink-400 hover:to-pink-600 transition-all mt-4"
             onClick={() => setIsCartOpen(false)}
           >
-            {totalCartCount > 0 ? "Перейти к оформлению половины заказа" : "Закрыть"}
+            {totalCartCount > 0 ? t('cart.checkout', lang) : t('cart.close', lang)}
           </button>
         </div>
       </Modal>
 
-      {/* Модальное окно Избранного */}
+      {/* Favorites Modal */}
       <Modal 
         isOpen={isFavOpen} 
         onClose={() => setIsFavOpen(false)}
-        title="Избранные половинки"
+        title={t('fav.title', lang)}
       >
         <div className="space-y-4">
           {favorites.length === 0 ? (
-            <p className="text-gray-400 text-center py-6">
-              Пока здесь пусто. В этом мире так трудно найти свою вторую половинку...
+            <p className="modal-text text-center py-6">
+              {t('fav.empty', lang)}
             </p>
           ) : (
             <ul className="space-y-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
               {products.filter(p => favorites.includes(p.id)).map(favProduct => (
-                <li key={favProduct.id} className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-xl border border-gray-700">
+                <li key={favProduct.id} className="flex items-center gap-3 p-3 cart-item-bg rounded-xl border cart-item-border">
                   <img src={favProduct.image} alt={favProduct.title} className="w-12 h-12 object-cover rounded-lg half-clip" />
                   <div className="flex-grow">
-                    <h4 className="text-sm font-bold text-white line-clamp-1">{favProduct.title}</h4>
+                    <h4 className="text-sm font-bold modal-title line-clamp-1">{favProduct.title}</h4>
                     <span className="text-xs text-yellow-400">${favProduct.price.toFixed(2)}</span>
                   </div>
                   <button onClick={() => handleToggleFavorite(favProduct.id)} className="text-pink-500 hover:text-pink-400">
-                    Убрать
+                    {t('fav.remove', lang)}
                   </button>
                 </li>
               ))}
@@ -206,11 +210,21 @@ function App() {
             className="w-full py-3 rounded-xl bg-gray-700 text-white font-bold hover:bg-gray-600 transition-all mt-4"
             onClick={() => setIsFavOpen(false)}
           >
-            Закрыть
+            {t('cart.close', lang)}
           </button>
         </div>
       </Modal>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 

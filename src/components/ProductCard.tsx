@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Product } from '../types';
 import { Heart, ShoppingBag } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
+import { t } from '../i18n';
 
 interface ProductCardProps {
   product: Product;
@@ -10,6 +12,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, isFavorite, onToggleFavorite }) => {
+  const { lang } = useLanguage();
   const [likes, setLikes] = useState(product.rating?.count ? Math.floor(product.rating.count / 2) : Math.floor(Math.random() * 100));
 
   const handleLike = () => {
@@ -59,7 +62,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, 
           <button 
             onClick={() => onAddToCart(product)}
             className="w-10 h-10 rounded-full bg-gray-700 hover:bg-pink-600 flex items-center justify-center transition-colors group/btn"
-            title="Добавить в корзину"
+            title={t('catalog.addToCart', lang)}
           >
             <ShoppingBag size={18} className="text-gray-300 group-hover/btn:text-white" />
           </button>
